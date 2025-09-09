@@ -1,0 +1,6 @@
+{
+    "DATABASE_PROXY_URL": "ws://127.0.0.1:9047",
+    "HANGMAN_URL": "http://localhost:4000",
+    "AUTH_URL": "http://localhost:8000/api/authenticate",
+    "TOKEN_URL": "http://localhost:8000/api/token"
+}
