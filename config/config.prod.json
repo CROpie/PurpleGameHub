@@ -1,6 +1,6 @@
 {
     "DATABASE_PROXY_URL": "wss://lobby.cropie.online/ws",
-    "HANGMAN_URL": "http://hangman.cropie.online",
-    "AUTH_URL": "http://localhost:8000/api/authenticate",
-    "TOKEN_URL": "http://localhost:8000/api/token"
+    "HANGMAN_URL": "https://hangman.cropie.online",
+    "AUTH_URL": "https://auth.cropie.online/api/authenticate",
+    "TOKEN_URL": "https://auth.cropie.online/api/token"
 }
