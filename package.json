@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "npx serve -l 1234",
+    "serve": "npx serve -l 8000",
     "build": "tsc && cp config/config.local.json dist/config.json",
     "build:prod": "tsc && cp config/config.prod.json dist/config.json"
   },

@@ -26,10 +26,10 @@ function LogInPage() {
     let form: HTMLFormElement
     let message: HTMLParagraphElement
 
-    let tokenUrl = ''
+    let authBaseUrl = ''
 
-    function open({tokenU}: {tokenU: string}) {
-        tokenUrl = tokenU
+    function open({AUTH_BASE_URL}: {AUTH_BASE_URL: string}) {
+        authBaseUrl = AUTH_BASE_URL
 
         const mainEl = document.getElementById("main")
         if (!(mainEl instanceof HTMLElement)) throw new Error("no main element")
@@ -71,7 +71,7 @@ function LogInPage() {
         const formData = new FormData(form)
     
         try {
-            const response = await fetch(tokenUrl, {
+            const response = await fetch(`${authBaseUrl}/api/token`, {
                     method: "POST",
                     body: formData
             })
@@ -83,7 +83,7 @@ function LogInPage() {
                 json = null
                 // data might be empty or not json
             }
-    
+
             if (!response.ok) {
                 message.textContent = json?.error ?? 'Something went wrong...'
                 return
@@ -95,9 +95,7 @@ function LogInPage() {
             }
     
             message.textContent = "token retrieved successfully"
-    
-            setCookie("token", json.data)
-    
+
             await init()
     
         } catch (error) {
@@ -120,9 +118,9 @@ function AdminPage() {
 
     let databaseProxyUrl: string
  
-    function open({databaseProxyU}: {databaseProxyU: string}) {
+    function open({DATABASE_PROXY_URL}: {DATABASE_PROXY_URL: string}) {
 
-        databaseProxyUrl = databaseProxyU
+        databaseProxyUrl = DATABASE_PROXY_URL
 
         main = assignEle<HTMLElement>("main")
 
@@ -256,50 +254,40 @@ function HubPage() {
 
 function AuthService() {
 
-    let token = ''
-
-    let authenticationUrl = ''
+    let authBaseUrl = ''
     let userData: UserData
 
     let logoutButton: HTMLButtonElement
-    
-    function init({authUrl}: {authUrl: string}): boolean{
+
+    function init({AUTH_BASE_URL}: {AUTH_BASE_URL: string}) {
+
+        authBaseUrl = AUTH_BASE_URL
 
         const logoutButtonEl = document.getElementById("logoutBtn")
         if (!(logoutButtonEl instanceof HTMLButtonElement)) throw new Error("no logout button")
         logoutButton = logoutButtonEl
 
         logoutButton.addEventListener('click', () => {
-            setCookie('token', 'delete', 0)
-            window.location.reload()
+            handleLogOut()
         })
-
-
-        authenticationUrl = authUrl
-        token = getCookie('token')
-        if (!token) {
-            console.error("cookie key 'token' has no value")
-            return false
-        }
-        return true
     }
 
-    async function validateTokenExtractUserdata(): Promise<boolean> {
+    async function validateToken(): Promise<boolean> {
         try {
 
-            const response = await fetch(authenticationUrl, {
+            const response = await fetch(`${authBaseUrl}/api/authenticate`, {
                     method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
+                    credentials: 'include'
                 })
-    
+
             let json
 
             // just handing the situation where data might be empty or not json
             try {
                 json = await response.json()
+
             } catch {
+
                 json = null
             }
     
@@ -315,9 +303,6 @@ function AuthService() {
 
             userData = json.data
 
-            // used when changing page url
-            setCookie("user", JSON.stringify(json.data))
-    
             return true
     
         } catch (error) {
@@ -330,14 +315,17 @@ function AuthService() {
         return userData
     }
 
-    function getCookie(name: string): string {
-        const matches = document.cookie.match(new RegExp(
-            `(?:^|; )${name.replace(/([.$?*|{}()[\]\\/+^])/g, '\\$1')}=([^;]*)`
-        ));
-        return matches ? decodeURIComponent(matches[1]!) : '';
+    async function handleLogOut() {
+
+        await fetch(`${authBaseUrl}/api/logout`, {
+            method: "GET",
+            credentials: 'include'
+        })
+
+        window.location.reload()
     }
 
-    return { init, validateTokenExtractUserdata, getUserData }
+    return { init, validateToken, getUserData }
 }
 
 async function init() {
@@ -350,20 +338,17 @@ async function init() {
     const adminPage = AdminPage()
     const hubPage = HubPage()
 
-    if (!authService.init({ authUrl: config.AUTH_URL })) {
-        loginPage.open({tokenU: config.TOKEN_URL})
-        return
-    }
+    authService.init({AUTH_BASE_URL: config.AUTH_BASE_URL})
 
-    if (!await authService.validateTokenExtractUserdata()){
-        loginPage.open({tokenU: config.TOKEN_URL})
+    if (!await authService.validateToken()){
+        loginPage.open({AUTH_BASE_URL: config.AUTH_BASE_URL})
         return
     }
 
     const userData = authService.getUserData()
 
     if (userData.username === 'admin') {
-        adminPage.open({databaseProxyU: config.DATABASE_PROXY_URL})
+        adminPage.open({DATABASE_PROXY_URL: config.DATABASE_PROXY_URL})
         return
     }
 

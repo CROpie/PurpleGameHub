@@ -1,0 +1,95 @@
+----- basic setup -----
+
+/home/chris/nginxtest/index.html to be served @ localhost:1111
+
+// create new site config
+sudo touch /etc/nginx/sites-available/nginxtest
+sudo nano /etc/nginx/sites-available/nginxtest
+
+server {
+    listen 1111;
+    server_name localhost;
+
+    root /home/chris/nginxtest;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+
+// run this command to create sybobolic link in sites-enabled
+// sites-available: all possible site configs
+// sites-enabled: just the ones that nginx should load
+sudo ln -s /etc/nginx/sites-available/nginxtest /etc/nginx/sites-enabled/
+
+A change in sites-available is immediately reflected in sites-enabled
+
+Nginx’s main config (/etc/nginx/nginx.conf) typically has a line like:
+include /etc/nginx/sites-enabled/*; (load every config in sites-enabled)
+
+// to disabled loading a config, just delete it from sites-enabled
+
+// restart nginx
+sudo nginx -t
+sudo systemctl reload nginx
+
+localhost:1111: Success!
+
+// if not success, this might help:
+sudo tail -f /var/log/nginx/error.log
+
+----- file paths -----
+
+X incorrect
+
+server {
+    listen 1111;
+    server_name localhost;
+
+    root /home/chris/nginxtest;
+    index index.html;
+
+    location /hello/ {
+        try_files $uri $uri/ =404;
+    }
+}
+
+This is saying:
+root is /home/chris/nginxtest
+index should be located here: /home/chris/nginxtest/hello/index.html
+
+O correct
+
+server {
+    listen 1111;
+    server_name localhost;
+
+    location /hello {
+        alias /home/chris/nginxtest/;
+        index index.html;
+    }
+}
+
+// If you use alias inside a location block, you don’t inherit the root from the server block.
+// /hello will be replaced completely by alias: /home/chris/nginxtest/
+
+----- PHP API -----
+Tried to use nginx for hosting PHP Auth API, but couldn't get it to work.
+Instead, will run php -S localhost:8000 (apache), and use nginx to proxy-pass to it:
+    
+    location /auth/ {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+visiting https://localhost:8000/auth/api/authenticate
+Trailing '/' in /auth/ and http://127.0.0.1:8000/
+$_SERVER['REQUEST_URI']
+
+/auth + http://127.0.0.1:8000 = /auth/api/authenticate
+/auth + http://127.0.0.1:8000/ = /auth/api/authenticate
+/auth/ + http://127.0.0.1:8000 = /auth/api/authenticate
+/auth/ + http://127.0.0.1:8000/ = /api/authenticate
