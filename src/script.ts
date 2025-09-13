@@ -73,7 +73,8 @@ function LogInPage() {
         try {
             const response = await fetch(`${authBaseUrl}/api/token`, {
                     method: "POST",
-                    body: formData
+                    body: formData,
+                    credentials: 'include'
             })
     
             let json;
