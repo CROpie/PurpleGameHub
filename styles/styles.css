@@ -132,3 +132,76 @@ nav + * {
     color: red;
     text-align: center;
 }
+
+/* ADMIN PAGE */
+
+#admin-page {
+    padding-inline: 200px;
+}
+
+#admin-page input {
+    color: white;
+    background: transparent;
+    width: 100%;
+    padding: 8px 16px;
+    display: block;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+#admin-page input:-webkit-autofill {
+    background-color: transparent !important;
+    -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+    -webkit-text-fill-color: inherit !important;
+  }
+
+  #admin-page input:-webkit-autofill:focus {
+    background-color: transparent !important;
+    -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+    -webkit-text-fill-color: inherit !important;
+  }
+
+#admin-page button {
+    color: white;
+    background: transparent;
+    width: 100%;
+    border: 2px solid white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    margin-top: 16px;
+    transition: var(--transition);
+}
+  
+#admin-page button:hover {
+    color: lime;
+    background: transparent;
+    width: 100%;
+    border: 2px solid lime;
+    padding: 8px 16px;
+    border-radius: 8px;
+    margin-top: 16px;
+}
+
+#admin-page #message {
+    color: orange;
+    text-align: center;
+    margin-top: 24px;
+}
+
+#admin-page table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 24px;
+    background: hsla(0, 0%, 0%, 0.8);
+}
+
+#admin-page table th {
+    color: lime;
+    text-align: left;
+}
+
+#admin-page th,
+#admin-page td {
+    border: 1px dotted orange;
+    padding: 4px;
+}

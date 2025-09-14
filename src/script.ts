@@ -139,13 +139,15 @@ function AdminPage() {
 
     function render() {
         const template = `
-        <section id="adminSection">
-            <h3>Database Connection</h3>
-            <input type="text" id="sqlInput" />
-            <button id="sendBtn" type="button">Execute</button>
-            <p id="message"></p>
-            <table id="table"></table>
-        </section>
+        <article id="admin-page">
+            <section id="adminSection">
+                <h3>Database Connection</h3>
+                <input type="text" id="sqlInput" />
+                <button id="sendBtn" type="button">Execute</button>
+                <p id="message"></p>
+                <table id="table"></table>
+            </section>
+        </article>
         `
         
         main.innerHTML = template
