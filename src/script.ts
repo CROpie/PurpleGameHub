@@ -50,16 +50,18 @@ function LogInPage() {
 
     function render() {
         const template = `
-        <section id="formSection">
-            <form id="loginForm">
-                <input name="username" id="username" type="text">
-                <label for="username">Username</label>
-                <input name="password" id="password" type="password">
-                <label for="password">Password</label>
-                <button type="submit">Submit</button>
-            </form>
-            <p id="message"></p>
-        </section>
+        <article id="login-page">
+            <section id="formSection">
+                <form id="loginForm">
+                    <label for="username">Username</label>
+                    <input name="username" id="username" type="text">
+                    <label for="password">Password</label>
+                    <input name="password" id="password" type="password">
+                    <button type="submit">Submit</button>
+                </form>
+                <p id="message"></p>
+            </section>
+        </article>
         `
         main.innerHTML = template
     }
