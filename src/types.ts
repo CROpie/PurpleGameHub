@@ -6,5 +6,6 @@ export type UserData = {
 export type Config = {
     DATABASE_PROXY_URL: string,
     HANGMAN_URL: string,
+    SNAKE_URL: string,
     AUTH_BASE_URL: string
 }

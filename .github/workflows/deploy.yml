@@ -54,6 +54,9 @@ jobs:
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           script: |
+            if tmux has-session -t prod 2>/dev/null; then
+              tmux kill-session -t prod
+            fi
             cd /var/www/lobby
             mv ./tmp/* .
             rm -rf ./tmp

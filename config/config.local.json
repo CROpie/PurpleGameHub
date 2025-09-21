@@ -1,5 +1,6 @@
 {
     "DATABASE_PROXY_URL": "ws://127.0.0.1:9047",
     "HANGMAN_URL": "http://localhost:1234/hangman/",
+    "SNAKE_URL": "http://localhost:1234/snake/",
     "AUTH_BASE_URL": "http://localhost:1234/auth"
 }

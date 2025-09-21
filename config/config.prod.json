@@ -1,5 +1,6 @@
 {
     "DATABASE_PROXY_URL": "wss://lobby.cropie.online/ws",
     "HANGMAN_URL": "https://hangman.cropie.online/",
+    "SNAKE_URL": "https://snake.cropie.online/",
     "AUTH_BASE_URL": "https://auth.cropie.online"
 }

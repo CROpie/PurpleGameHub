@@ -2,11 +2,6 @@ import type { Config, UserData } from "./types";
 
 /* Helpers */
 
-function setCookie(name: string, value: string, days=1) {
-    const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString()
-    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
-}
-
 function assignEle<T extends HTMLElement>(elementId: string): T {
     const element = document.getElementById(elementId)
     if (!element) throw new Error(`no element with id ${elementId}`)
@@ -228,11 +223,13 @@ function HubPage() {
     let main: HTMLElement
     let userData: UserData
     let hangmanUrl: string
+    let snakeUrl: string
 
-    function open({userD, hangmanU}: {userD: UserData, hangmanU: string}) {
+    function open({userD, hangmanU, snakeU}: {userD: UserData, hangmanU: string, snakeU: string}) {
 
         userData = userD
         hangmanUrl = hangmanU
+        snakeUrl = snakeU
 
         const mainEl = document.getElementById("main")
         if (!(mainEl instanceof HTMLElement)) throw new Error("no main element")
@@ -247,6 +244,7 @@ function HubPage() {
         <section id="hubSection">
             <h3>Welcome to the hub ${userData.username}</h3>
             <a href="${hangmanUrl}">Hangman</a>
+            <a href="${snakeUrl}">Snake</a>
         </section>
         `
         main.innerHTML = template
@@ -357,7 +355,7 @@ async function init() {
         return
     }
 
-    hubPage.open({userD: userData, hangmanU: config.HANGMAN_URL})
+    hubPage.open({userD: userData, hangmanU: config.HANGMAN_URL, snakeU: config.SNAKE_URL})
 }
 
 onload = init
